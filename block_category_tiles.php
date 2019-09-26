@@ -23,7 +23,7 @@
  */
 
 include_once($CFG->dirroot . '/course/lib.php');
-include_once($CFG->libdir . '/coursecatlib.php');
+//include_once($CFG->libdir . '/coursecatlib.php');
 require_once($CFG->libdir . '/filestorage/file_storage.php');
 
 class block_category_tiles extends block_list {
@@ -32,6 +32,10 @@ class block_category_tiles extends block_list {
     }
 
     function has_config() {
+        return false;
+    }
+
+    function instance_allow_multiple() {
         return false;
     }
 
@@ -49,14 +53,19 @@ class block_category_tiles extends block_list {
         $this->content->icons = array();
         $this->content->footer = '';
 
-        $categories = coursecat::get(0)->get_children();  // Parent = 0   ie top-level categories only
+        $categories = core_course_category::get(0)->get_children();  // Parent = 0   ie top-level categories only
         if ($categories) {   //Check we have categories
             if (count($categories) > 1 || (count($categories) == 1 && $DB->count_records('course') > 200)) {     // Just print top level category links
                 foreach ($categories as $category) {
                     $categoryname = $category->get_formatted_name();
                     $categoryimage = $this->get_category_image($category);
                     $dimmed = $category->visible ? "" : " dimmed";
-                    $this->content->items[]="<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\"><div class=\"category-tile-title\">$categoryname</div><div class=\"category-tile-image\" style=\"background-image: url('$categoryimage')\"></div></a>";
+                    $this->content->items[]="<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">
+                                                <figure>
+                                                    <img src='$categoryimage'>
+                                                    <figcaption>$categoryname</figcaption>
+                                                </figure>
+                                            </a>";
                 }
             }
         }
@@ -65,20 +74,26 @@ class block_category_tiles extends block_list {
     }
 
     function get_category_image($coursecat) {
-        $contextid = $coursecat->get_context()->id;
+        //global $CFG;
+//        $contextid = context_system::instance()->id;
+        $contextid = $this->context->id;
+        //if (empty($CFG->block_category_tiles_category_icons)) return false;
         $fs = get_file_storage();
-        if ($files = $fs->get_area_files($contextid, 'coursecat', 'categoryimage', 0)) {
+        if ($files = $fs->get_area_files($contextid, 'block_category_tiles', 'content', 0)) {
             foreach($files as $file) {
-                // Do not return unknown files.
-                if ($file->get_filename() === ".") {
+                $name = $file->get_filename();
+                if ($name === ".") {
                     continue;
                 }
-                // Return url of the file.
-                return moodle_url::make_pluginfile_url($file->get_contextid(),
-                    $file->get_component(), $file->get_filearea(), null, $file->get_filepath(), $file->get_filename())->out();
+                if (strpos($name, $coursecat->id . ".") === 0) {
+                      $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
+                            null,
+                            $file->get_filepath(), $file->get_filename()
+                        ); //, false);
+                      return $url;
+                }
             }
         }
-        // If no files for this category, return false.
         return false;
     }
 

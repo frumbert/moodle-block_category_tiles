@@ -25,3 +25,10 @@
 $string['category_tiles:addinstance'] = 'Add a new Category Tiles block';
 $string['category_tiles:myaddinstance'] = 'Add a new Category Tiles block to My learning';
 $string['pluginname'] = 'Category Tiles';
+$string['configtitle'] = 'Category Tiles';
+$string['adminview'] = 'Admin view';
+
+$string['category_icons'] = "Images for each category (png, jpg, gif, webp, svg)";
+$string['category_icons_description'] = "Name the image with the category id (number) matching the category id it is for, e.g. 5.jpg";
+
+$string['privacy:metadata'] = 'The Category Tile block only shows data about courses and does not store any data itself.';
