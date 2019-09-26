@@ -60,13 +60,17 @@ class block_category_tiles extends block_list {
                     $categoryname = $category->get_formatted_name();
                     $categoryimage = $this->get_category_image($category);
                     $dimmed = $category->visible ? "" : " dimmed";
-                    $this->content->items[]="<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">
-                                                <figure>
-                                                    <img src='$categoryimage'>
-                                                    <figcaption>$categoryname</figcaption>
-                                                </figure>
-                                            </a>";
-                }
+                    $this->content->items[] = "<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">
+                        <div class=\"category-tile-title\">$categoryname</div>
+                        <div class=\"category-tile-image\" style=\"background-image: url('$categoryimage')\"></div>
+                    </a>";
+                    // $this->content->items[]="<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">
+                    //                             <figure>
+                    //                                 <img src='$categoryimage'>
+                    //                                 <figcaption>$categoryname</figcaption>
+                    //                             </figure>
+                    //                         </a>";
+                 }
             }
         }
 
