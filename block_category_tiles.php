@@ -59,17 +59,9 @@ class block_category_tiles extends block_list {
                 foreach ($categories as $category) {
                     $categoryname = $category->get_formatted_name();
                     $categoryimage = $this->get_category_image($category);
-                    $dimmed = $category->visible ? "" : " dimmed";
-                    $this->content->items[] = "<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">
-                        <div class=\"category-tile-title\">$categoryname</div>
-                        <div class=\"category-tile-image\" style=\"background-image: url('$categoryimage')\"></div>
-                    </a>";
-                    // $this->content->items[]="<a class=\"category-tile$dimmed\" href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">
-                    //                             <figure>
-                    //                                 <img src='$categoryimage'>
-                    //                                 <figcaption>$categoryname</figcaption>
-                    //                             </figure>
-                    //                         </a>";
+                    if (!$category->visible && !is_siteadmin()) continue;
+                    $this->content->icons[] = "<a href='{$CFG->wwwroot}/course/index.php?categoryid={$category->id}'><img src='$categoryimage' class='course-tile-image'></a>";
+                    $this->content->items[] = "<a href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">$categoryname</a>";
                  }
             }
         }
@@ -78,10 +70,7 @@ class block_category_tiles extends block_list {
     }
 
     function get_category_image($coursecat) {
-        //global $CFG;
-//        $contextid = context_system::instance()->id;
         $contextid = $this->context->id;
-        //if (empty($CFG->block_category_tiles_category_icons)) return false;
         $fs = get_file_storage();
         if ($files = $fs->get_area_files($contextid, 'block_category_tiles', 'content', 0)) {
             foreach($files as $file) {
