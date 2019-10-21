@@ -28,7 +28,7 @@ require_once($CFG->libdir . '/filestorage/file_storage.php');
 
 class block_category_tiles extends block_list {
     function init() {
-        $this->title = get_string('pluginname', 'block_category_tiles');
+        $this->title = get_string('configtitle', 'block_category_tiles');
     }
 
     function has_config() {
