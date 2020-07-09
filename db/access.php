@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block caps.
+ * block_category_tiles block caps.
  *
  * @package    block_category_tiles
- * @copyright  Mark Nelson <markn@moodle.com>
+ * @copyright  1999 onwards tim.stclair@gmail.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

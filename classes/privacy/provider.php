@@ -18,6 +18,7 @@
  * Privacy Subsystem implementation for block_course_tiles.
  *
  * @package    block_category_tiles
+ * @copyright  1999 onwards tim.stclair@gmail.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

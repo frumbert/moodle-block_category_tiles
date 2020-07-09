@@ -15,16 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course list block.
+ * Category Tiles block.
  *
  * @package    block_category_tiles
- * @copyright  1999 onwards Oliver Redding (oliverredding at catalyst dot net dot nz)
+ * @copyright  1999 onwards tim.stclair@gmail.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * A block for linking to top-level categories in visual way.
  */
 
 include_once($CFG->dirroot . '/course/lib.php');
-//include_once($CFG->libdir . '/coursecatlib.php');
-require_once($CFG->libdir . '/filestorage/file_storage.php');
+include_once($CFG->dirroot . '/course/renderer.php');
 
 class block_category_tiles extends block_list {
     function init() {
@@ -35,6 +36,7 @@ class block_category_tiles extends block_list {
         return false;
     }
 
+    // single instance, as it has no options
     function instance_allow_multiple() {
         return false;
     }
@@ -57,10 +59,23 @@ class block_category_tiles extends block_list {
         if ($categories) {   //Check we have categories
             if (count($categories) > 1 || (count($categories) == 1 && $DB->count_records('course') > 200)) {     // Just print top level category links
                 foreach ($categories as $category) {
+
+                    if (is_object($category) && $category instanceof core_course_category) {
+                        $coursecat = $category;
+                    } else {
+                        $coursecat = core_course_category::get(is_object($category) ? $category->id : $category);
+                    }
+
+                    $chelper = new coursecat_helper();
+                    if ($description = $chelper->get_category_formatted_description($coursecat)) {
+                        $categoryimage = $this->get_category_image($description);
+                        if ($categoryimage) {
+                            $this->content->icons[] = "<a href='{$CFG->wwwroot}/course/index.php?categoryid={$category->id}'><img src='$categoryimage' class='course-tile-image'></a>";
+                        }
+                    }
                     $categoryname = $category->get_formatted_name();
-                    $categoryimage = $this->get_category_image($category);
+
                     if (!$category->visible && !is_siteadmin()) continue;
-                    $this->content->icons[] = "<a href='{$CFG->wwwroot}/course/index.php?categoryid={$category->id}'><img src='$categoryimage' class='course-tile-image'></a>";
                     $this->content->items[] = "<a href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">$categoryname</a>";
                  }
             }
@@ -69,23 +84,13 @@ class block_category_tiles extends block_list {
         return $this->content;
     }
 
-    function get_category_image($coursecat) {
-        $contextid = $this->context->id;
-        $fs = get_file_storage();
-        if ($files = $fs->get_area_files($contextid, 'block_category_tiles', 'content', 0)) {
-            foreach($files as $file) {
-                $name = $file->get_filename();
-                if ($name === ".") {
-                    continue;
-                }
-                if (strpos($name, $coursecat->id . ".") === 0) {
-                      $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
-                            null,
-                            $file->get_filepath(), $file->get_filename()
-                        ); //, false);
-                      return $url;
-                }
-            }
+    function get_category_image($html){
+        if (strlen(trim($html)) === 0) return false;
+        $dom = new DOMDocument;
+        $dom->loadHTML($html);
+        $images = $dom->getElementsByTagName('img');
+        foreach ($images as $image) {
+            return $image->getAttribute('src');
         }
         return false;
     }

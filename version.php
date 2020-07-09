@@ -18,12 +18,12 @@
  * Version details
  *
  * @package    block_category_tiles
- * @copyright  1999 onwards Oliver Redding (oliverredding at catalyst dot net dot nz)
+ * @copyright  1999 onwards tim.stclair@gmail.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019092500;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2020070900;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2016112900;        // Requires this Moodle version
 $plugin->component = 'block_category_tiles'; // Full name of the plugin (used for diagnostics)
