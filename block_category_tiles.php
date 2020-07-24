@@ -24,75 +24,59 @@
  * A block for linking to top-level categories in visual way.
  */
 
-include_once($CFG->dirroot . '/course/lib.php');
-include_once($CFG->dirroot . '/course/renderer.php');
-
-class block_category_tiles extends block_list {
+class block_category_tiles extends block_base {
     function init() {
-        $this->title = get_string('configtitle', 'block_category_tiles');
+            $this->title = get_string('pluginname', 'block_category_tiles');
+    }
+
+   function instance_allow_multiple() {
+        return true;
     }
 
     function has_config() {
-        return false;
+        return true;
     }
 
-    // single instance, as it has no options
-    function instance_allow_multiple() {
-        return false;
+    function applicable_formats() {
+        return array(
+                'admin' => false,
+                'site-index' => true,
+                'course-view' => true,
+                'course-index-category' => true,
+                'mod' => false,
+                'my' => true
+        );
+    }
+
+    public function specialization() {
+        if (empty($this->config->title)) {
+            $this->title = get_string('pluginname', 'block_category_tiles');
+        } else {
+            $this->title = $this->config->title;
+        }
     }
 
     function get_content() {
         global $CFG, $USER, $DB, $OUTPUT;
 
-        if($this->content !== NULL) {
+        if (isset($this->content)) {
             return $this->content;
         }
 
-        $this->page->requires->js_call_amd('block_category_tiles/category_tiles', 'init');
+        // category might be present if the block is used on a course category index page
+        $categoryid = optional_param('categoryid', 0, PARAM_INT);
 
-        $this->content = new stdClass;
-        $this->content->items = array();
-        $this->content->icons = array();
+        // get the template renderer and initialise the tiles generator
+        $renderable = new \block_category_tiles\output\tiles($this->config, $categoryid);
+        $renderer = $this->page->get_renderer('block_category_tiles');
+
+        // output the block
+        $this->content = new stdClass();
+        $this->content->text = $renderer->render($renderable);
         $this->content->footer = '';
 
-        $categories = core_course_category::get(0)->get_children();  // Parent = 0   ie top-level categories only
-        if ($categories) {   //Check we have categories
-            if (count($categories) > 1 || (count($categories) == 1 && $DB->count_records('course') > 200)) {     // Just print top level category links
-                foreach ($categories as $category) {
-
-                    if (is_object($category) && $category instanceof core_course_category) {
-                        $coursecat = $category;
-                    } else {
-                        $coursecat = core_course_category::get(is_object($category) ? $category->id : $category);
-                    }
-
-                    $chelper = new coursecat_helper();
-                    if ($description = $chelper->get_category_formatted_description($coursecat)) {
-                        $categoryimage = $this->get_category_image($description);
-                        if ($categoryimage) {
-                            $this->content->icons[] = "<a href='{$CFG->wwwroot}/course/index.php?categoryid={$category->id}'><img src='$categoryimage' class='course-tile-image'></a>";
-                        }
-                    }
-                    $categoryname = $category->get_formatted_name();
-
-                    if (!$category->visible && !is_siteadmin()) continue;
-                    $this->content->items[] = "<a href=\"$CFG->wwwroot/course/index.php?categoryid=$category->id\">$categoryname</a>";
-                 }
-            }
-        }
-
         return $this->content;
-    }
 
-    function get_category_image($html){
-        if (strlen(trim($html)) === 0) return false;
-        $dom = new DOMDocument;
-        $dom->loadHTML($html);
-        $images = $dom->getElementsByTagName('img');
-        foreach ($images as $image) {
-            return $image->getAttribute('src');
-        }
-        return false;
     }
 
 }

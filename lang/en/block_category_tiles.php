@@ -25,10 +25,12 @@
 $string['category_tiles:addinstance'] = 'Add a new Category Tiles block';
 $string['category_tiles:myaddinstance'] = 'Add a new Category Tiles block to My learning';
 $string['pluginname'] = 'Category Tiles';
-$string['configtitle'] = 'Category Tiles';
+$string['configtitle'] = 'Category Tiles block title';
 $string['adminview'] = 'Admin view';
+$string['configfilter'] = 'Show only enrollable';
+$string['configfilter_help'] = 'Only show categories that contain courses the user is enrolled in / is eligible for enrolment in';
 
-$string['category_icons'] = "Images for each category (png, jpg, gif, webp, svg)";
-$string['category_icons_description'] = "Name the image with the category id (number) matching the category id it is for, e.g. 5.jpg";
+$string['privacy:metadata'] = 'The Category Tile block only shows data about categories and does not store any data itself.';
 
-$string['privacy:metadata'] = 'The Category Tile block only shows data about courses and does not store any data itself.';
+$string['aria:categorytileimage'] = 'Category tile image';
+$string['aria:categoryname'] = 'Category name';
