@@ -14,7 +14,7 @@ You can change the block title, and choose whether the category list is _filtere
 
 ![Settings screen of block](https://i.imgur.com/izO8UlT.png)
 
-A filtered list will only list categories that contain courses that the user is already enrolled in or can enrol themselves in. Filtering doesn't apply to admins.
+A filtered list will only list categories that contain courses that the user is already enrolled in or can enrol themselves in. Filtering doesn't apply to admins. In the image below, the learner is enrolled in a course under the _sketching_ category, and a course under the _colours_ category has self-enrolment enrolment method enabled.
 
 ![Example of a filtered tile list shown to a learner](https://i.imgur.com/125TGNV.png)
 
