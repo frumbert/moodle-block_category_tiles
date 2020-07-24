@@ -6,6 +6,8 @@ This block plugin will display categories as tiles in a similar way to dashboard
 
 The block can be placed on the dashboard or in the course category pages or the site homepage (or all of these).
 
+![Contents will conform to the shape and size of the block](https://i.imgur.com/5G54NHW.png)
+
 Admins get to see all categories but hidden categories will be noted.
 
 ## Options
