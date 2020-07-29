@@ -67,6 +67,7 @@ class tiles implements renderable, templatable {
 
                 $chelper = new \coursecat_helper();
                 $categoryname = $category->get_formatted_name();
+		$categoryimage = '';
                 if ($description = $chelper->get_category_formatted_description($coursecat)) {
                     $categoryimage = $this->get_category_image($description);
                 }
